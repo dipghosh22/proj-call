@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM ruby:2.7.4 AS builder
+FROM ruby:3.2.2 AS builder
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
 COPY . .
 
 # Stage 2: Final image with MySQL and Redis support
-FROM ruby:2.7.4
+FROM ruby:3.2.2
 
 WORKDIR /app
 
