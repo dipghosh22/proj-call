@@ -7,4 +7,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+  post "/inbound/sms", to: 'sms#inbound'
+  post "/outbound/sms", to: 'sms#outbound'
 end
