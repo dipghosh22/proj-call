@@ -32,8 +32,8 @@ Before you begin, ensure you have the following installed:
 
 2. Run the Docker container:
     ```bash 
-     docker build -t proj-call .
-      docker build -t proj-call .
+    docker build -t proj-call .
+    docker run -p 3000:3000 proj-call
     
 
 ### Accessing the Application
