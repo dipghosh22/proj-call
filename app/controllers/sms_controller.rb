@@ -3,6 +3,8 @@ class SmsController < ApplicationController
     skip_before_action :verify_authenticity_token
     before_action :authenticate_caller, :validate_parameters
 
+    before_action :check_rate_limit, only: [:outbound]
+
 
     def inbound
         to, from, text = sms_params[:to], sms_params[:from], sms_params[:text]
@@ -17,6 +19,8 @@ class SmsController < ApplicationController
 
     def outbound
         to, from, text = sms_params[:to], sms_params[:from], sms_params[:text]
+
+
 
         key = "calls:#{from.to_s}_#{to.to_s}"
         data = $redis.get(key)
@@ -44,6 +48,17 @@ class SmsController < ApplicationController
 
     def positive_numeric?(str)
         !!(str.to_s =~ /\A[1-9]\d*\z/)
+    end
+
+
+    def check_rate_limit
+        key = "user_calling_outbound:#{sms_params[:from]}"
+        count = $redis.get(key).to_i
+        puts "count: #{count}"
+        return render json: { message:"", error: "limit reached for from #{sms_params[:from]}"}, status: 400 if count >= 50
+
+        $redis.incr(key)
+        $redis.expire(key, 24.hours.to_i)
     end
       
 
